@@ -12,7 +12,6 @@
 
     <artifactId>cloud-stream-common</artifactId>
     <name>${project.artifactId}</name>
-    <version>${project.parent.version}</version>
     <packaging>pom</packaging>
 
 </project>

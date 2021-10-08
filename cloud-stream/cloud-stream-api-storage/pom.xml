@@ -12,7 +12,6 @@
 
     <artifactId>cloud-stream-api-storage</artifactId>
     <name>${project.artifactId}</name>
-    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>
