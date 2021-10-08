@@ -1,0 +1,78 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+
+  clone-repository:
+    docker:
+      - image: cimg/openjdk:17.0
+    resource_class: small
+    working_directory: ~/project/
+    steps:
+      - checkout
+      - run:
+          name: Cloning the respository
+          command: ls -l
+#      - run:
+#          name: Building common
+#          command: mvn clean package
+#      - run:
+#          name: Building repository
+#          command: mvn clean package
+#      - run:
+#          name: Building domain
+#          command: mvn clean package
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  microservice-build-deploy:
+    parameters:
+      microservice-module-name:
+        type: string
+    docker:
+      - image: cimg/openjdk:17.0
+    resource_class: small
+    working_directory: ~/project/cloud-stream/
+    steps:
+      - run:
+          name: Building << parameters.microservice-module-name >>
+          command: ls -l ~/project/cloud-stream/
+#      - run:
+#          name: Building << parameters.microservice-module-name >>
+#          command: mvn clean package -f << parameters.microservice-module-name >>/pom.xml
+
+workflows:
+
+  common:
+    jobs:
+      - clone-repository:
+          filters:
+            branches:
+              only: master
+  backend:
+    jobs:
+      - microservice-build-deploy:
+          microservice-module-name: cloud-stream-api-user
+          filters:
+            branches:
+              only: master
+      - microservice-build-deploy:
+          microservice-module-name: cloud-stream-api-storage
+          filters:
+            branches:
+              only: master
+      - microservice-build-deploy:
+          microservice-module-name: cloud-stream-api-stream
+          filters:
+            branches:
+              only: master
+      - microservice-build-deploy:
+          microservice-module-name: cloud-stream-api-download
+          filters:
+            branches:
+              only: master
