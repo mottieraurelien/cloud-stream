@@ -2,6 +2,16 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+# Common configuration for jobs :
+#executors:
+#  my-executor:
+#    docker:
+#      - image: buildpack-deps:jessie
+#        auth:
+#          username: mydockerhub-user
+#          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+#    working_directory: /tmp
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -10,6 +20,7 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
+    working_directory: /tmp
     steps:
       - checkout
       - run:
@@ -21,20 +32,11 @@ jobs:
       - run:
           name: Building domain
           command: mvn clean install -f backend/cloud-stream-domain/pom.xml
-      - run:
-          name: Listing the respository content
-          command: ls -l /home/circleci/project
-      - run:
-          name: Listing the working directory before saving
-          command: ls -l /tmp/workspace
       - persist_to_workspace:
-          root: .
+          root: workspace
           paths:
             - backend
             - frontend
-      - run:
-          name: Listing the working directory after saving
-          command: ls -l /tmp/workspace
 
   microservice-build-deploy:
     parameters:
@@ -43,15 +45,16 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
+    working_directory: /tmp
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - run:
-          name: Listing the attached workspace content
+          name: Listing ./
           command: ls -l ./
       - run:
-          name: Listing the original workspace content
-          command: ls -l /tmp/workspace
+          name: Listing /tmp
+          command: ls -l /tmp
 #      - run:
 #          name: Listing the repository (backend)
 #          command: ls -l ./backend
