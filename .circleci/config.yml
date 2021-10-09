@@ -3,9 +3,9 @@ version: 2.1
 executors:
   cloud-stream-executor:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: $EXECUTOR_DOCKER_IMAGE
     resource_class: medium
-    working_directory: ~/project
+    working_directory: $WORKING_DIRECTORY
 
 jobs:
   clone-repository:
@@ -14,7 +14,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "backend/pom.xml" }}
+            - maven-dependencies-{{ checksum "backend/pom.xml" }}
       - run:
           name: Building common
           command: mvn install -f backend/cloud-stream-common/pom.xml
@@ -26,7 +26,7 @@ jobs:
           command: mvn install -f backend/cloud-stream-domain/pom.xml
       - run:
           name: Listing artefacts
-          command: ls -l ~/.m2/aurelienmottier/cloud/stream/cloud-stream-common/1.0-SNAPSHOT/*.jar
+          command: ls -l ~/.m2/repository/aurelienmottier/cloud/stream/cloud-stream-common/1.0-SNAPSHOT/*.jar
       - persist_to_workspace:
           root: .
           paths:
@@ -35,7 +35,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "backend/pom.xml" }}
+          key: maven-dependencies-{{ checksum "backend/pom.xml" }}
 
   microservice-build:
     executor: cloud-stream-executor
@@ -47,20 +47,20 @@ jobs:
           at: ./
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "backend/pom.xml" }}
+            - maven-dependencies-{{ checksum "backend/pom.xml" }}
       - run:
           name: Listing M2
           command: ls -l ~/.m2/
       - run:
           name: Listing artefacts
-          command: ls -l ~/.m2/aurelienmottier/cloud/stream/cloud-stream-common/1.0-SNAPSHOT/*.jar
+          command: ls -l ~/.m2/repository/aurelienmottier/cloud/stream/cloud-stream-common/1.0-SNAPSHOT/*.jar
       - run:
           name: Building << parameters.microservice-module-name >>
           command: mvn package -f backend/<< parameters.microservice-module-name >>/pom.xml
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "backend/pom.xml" }}
+          key: maven-dependencies-{{ checksum "backend/pom.xml" }}
 
 workflows:
   integration:
