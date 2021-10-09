@@ -55,21 +55,29 @@ workflows:
             branches:
               only: master
       - microservice-build-deploy:
+          requires:
+            - clone-repository
           microservice-module-name: cloud-stream-api-user
           filters:
             branches:
               only: master
       - microservice-build-deploy:
+          requires:
+            - clone-repository
           microservice-module-name: cloud-stream-api-storage
           filters:
             branches:
               only: master
       - microservice-build-deploy:
+          requires:
+            - clone-repository
           microservice-module-name: cloud-stream-api-stream
           filters:
             branches:
               only: master
       - microservice-build-deploy:
+          requires:
+            - clone-repository
           microservice-module-name: cloud-stream-api-download
           filters:
             branches:
