@@ -3,9 +3,9 @@ version: 2.1
 executors:
   cloud-stream-executor:
     docker:
-      - image: $EXECUTOR_DOCKER_IMAGE
+      - image: cimg/openjdk:17.0
     resource_class: medium
-    working_directory: $WORKING_DIRECTORY
+    working_directory: ~/project
 
 jobs:
   clone-repository:
