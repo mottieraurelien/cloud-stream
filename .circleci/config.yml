@@ -7,7 +7,6 @@ version: 2.1
 jobs:
 
   clone-repository:
-    working_directory: /tmp/workspace
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
@@ -41,13 +40,12 @@ jobs:
     parameters:
       microservice-module-name:
         type: string
-    working_directory: /tmp/workspace
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
     steps:
       - attach_workspace:
-          at: ./
+          at: /tmp/workspace
       - run:
           name: Listing the attached workspace content
           command: ls -l ./
