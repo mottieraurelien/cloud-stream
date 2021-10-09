@@ -1,8 +1,5 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Common configuration for jobs that compose the workflow :
 executors:
   cloud-stream-executor:
     docker:
@@ -10,10 +7,7 @@ executors:
     resource_class: medium
     working_directory: ~/project
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-
   clone-repository:
     executor: cloud-stream-executor
     steps:
@@ -32,7 +26,6 @@ jobs:
           paths:
             - backend
             - frontend
-
   microservice-build-deploy:
     executor: cloud-stream-executor
     parameters:
@@ -55,14 +48,12 @@ jobs:
 #          command: mvn clean install -f ./backend/<< parameters.microservice-module-name >>/pom.xml
 
 workflows:
-  common:
+  integration:
     jobs:
       - clone-repository:
           filters:
             branches:
               only: master
-  backend:
-    jobs:
       - microservice-build-deploy:
           microservice-module-name: cloud-stream-api-user
           filters:
@@ -83,3 +74,4 @@ workflows:
           filters:
             branches:
               only: master
+#    deployment: TODO
