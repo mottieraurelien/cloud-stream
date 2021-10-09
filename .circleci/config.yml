@@ -40,7 +40,7 @@ jobs:
             - ~/.m2
           key: maven-dependencies-{{ checksum "backend/pom.xml" }}
 
-  backend-microservice-build-container:
+  backend-build-container-image:
     executor: cloud-stream-executor
     parameters:
       microservice-module-name:
@@ -69,19 +69,19 @@ workflows:
       - backend-build-artefacts:
           requires:
             - clone-repository
-      - backend-microservice-build-container-image:
+      - backend-build-container-image:
           requires:
             - backend-build-artefacts
           microservice-module-name: cloud-stream-api-user
-      - backend-microservice-build-container-image:
+      - backend-build-container-image:
           requires:
             - backend-build-artefacts
           microservice-module-name: cloud-stream-api-storage
-      - backend-microservice-build-container-image:
+      - backend-build-container-image:
           requires:
             - backend-build-artefacts
           microservice-module-name: cloud-stream-api-stream
-      - backend-microservice-build-container-image:
+      - backend-build-container-image:
           requires:
             - backend-build-artefacts
           microservice-module-name: cloud-stream-api-download
