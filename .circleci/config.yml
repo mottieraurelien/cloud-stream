@@ -53,11 +53,8 @@ jobs:
           name: Listing ./
           command: ls -l ./
       - run:
-          name: Listing ./
-          command: ls -l /tmp
-      - run:
-          name: Listing /tmp
-          command: ls -l ~/project
+          name: Listing ./workspace
+          command: ls -l ./workspace
 #      - run:
 #          name: Listing the repository (backend)
 #          command: ls -l ./backend
