@@ -25,7 +25,7 @@ jobs:
           name: Listing the respository content
           command: ls -l /home/circleci/project
       - persist_to_workspace:
-          root: .
+          root: /home/circleci/project
           paths:
             - backend
             - frontend
@@ -40,9 +40,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run:
-          name: Listing the respository
-          command: ls -l ./
       - run:
           name: Listing the respository (backend)
           command: ls -l ./backend
