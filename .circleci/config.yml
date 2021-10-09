@@ -50,7 +50,7 @@ jobs:
           command: ls -l ~/.m2/repository/aurelienmottier/cloud/stream/cloud-stream-common/1.0-SNAPSHOT/*.jar
       - run:
           name: Building << parameters.microservice-module-name >>
-          command: mvn package -U -f backend/<< parameters.microservice-module-name >>/pom.xml
+          command: mvn package -f backend/<< parameters.microservice-module-name >>/pom.xml -X
       - save_cache:
           paths:
             - ~/.m2
