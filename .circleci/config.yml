@@ -13,9 +13,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Cloning the respository
-          command: ls -l
-      - run:
           name: Building common
           command: mvn clean install -f backend/cloud-stream-common/pom.xml
       - run:
@@ -40,8 +37,11 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
-          name: Building << parameters.microservice-module-name >>
-          command: mvn clean install -f ./backend/<< parameters.microservice-module-name >>/pom.xml
+          name: Listing the respository
+          command: ls -l ./backend/
+#      - run:
+#          name: Building << parameters.microservice-module-name >>
+#          command: mvn clean install -f ./backend/<< parameters.microservice-module-name >>/pom.xml
 
 workflows:
 
