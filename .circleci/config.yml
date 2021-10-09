@@ -7,6 +7,7 @@ version: 2.1
 jobs:
 
   clone-repository:
+    working_directory: /tmp/workspace
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
@@ -24,24 +25,34 @@ jobs:
       - run:
           name: Listing the respository content
           command: ls -l /home/circleci/project
+      - run:
+          name: Listing the working directory before saving
+          command: ls -l /tmp/workspace
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
             - backend
             - frontend
+      - run:
+          name: Listing the working directory after saving
+          command: ls -l /tmp/workspace
 
   microservice-build-deploy:
     parameters:
       microservice-module-name:
         type: string
+    working_directory: /tmp/workspace
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: ./
       - run:
-          name: Listing the workspace content
+          name: Listing the attached workspace content
+          command: ls -l ./
+      - run:
+          name: Listing the original workspace content
           command: ls -l /tmp/workspace
 #      - run:
 #          name: Listing the respository (backend)
