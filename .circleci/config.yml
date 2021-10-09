@@ -50,11 +50,8 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run:
-          name: Listing ./
-          command: ls -l ./
-      - run:
-          name: Listing ./workspace
-          command: ls -l ./workspace
+          name: Listing /tmp/workspace
+          command: ls -l /tmp/workspace
 #      - run:
 #          name: Listing the repository (backend)
 #          command: ls -l ./backend
