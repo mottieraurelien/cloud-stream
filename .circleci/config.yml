@@ -10,25 +10,24 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
-    working_directory: ~/project/
     steps:
       - checkout
       - run:
           name: Cloning the respository
           command: ls -l
-#      - run:
-#          name: Building common
-#          command: mvn clean package
-#      - run:
-#          name: Building repository
-#          command: mvn clean package
-#      - run:
-#          name: Building domain
-#          command: mvn clean package
+      - run:
+          name: Building common
+          command: mvn clean install -f backend/cloud-stream-common/pom.xml
+      - run:
+          name: Building repository
+          command: mvn clean install -f backend/cloud-stream-repository/pom.xml
+      - run:
+          name: Building domain
+          command: mvn clean install -f backend/cloud-stream-domain/pom.xml
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            - backend/*
 
   microservice-build-deploy:
     parameters:
@@ -37,14 +36,12 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
-    working_directory: ~/project/cloud-stream/
     steps:
+      - attach_workspace:
+          at: ./
       - run:
           name: Building << parameters.microservice-module-name >>
-          command: ls -l ~/project/cloud-stream/
-#      - run:
-#          name: Building << parameters.microservice-module-name >>
-#          command: mvn clean package -f << parameters.microservice-module-name >>/pom.xml
+          command: mvn clean install -f ./backend/<< parameters.microservice-module-name >>/pom.xml
 
 workflows:
 
