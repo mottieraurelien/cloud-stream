@@ -46,8 +46,8 @@ jobs:
           keys:
             - maven-dependencies-{{ checksum "backend/pom.xml" }}
       - run:
-          name: Listing artefacts
-          command: ls -l ~/.m2/repository/aurelienmottier/cloud/stream/cloud-stream-common/1.0-SNAPSHOT/*.jar
+          name: Resolving Maven dependencies
+          command: mvn dependency:resolve -f backend/pom.xml
       - run:
           name: Building << parameters.microservice-module-name >>
           command: mvn package -f backend/<< parameters.microservice-module-name >>/pom.xml -X
