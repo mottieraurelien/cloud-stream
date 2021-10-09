@@ -19,7 +19,7 @@ jobs:
   clone-repository:
     docker:
       - image: cimg/openjdk:17.0
-    resource_class: small
+    resource_class: medium
     working_directory: ~/project
     steps:
       - checkout
@@ -44,14 +44,17 @@ jobs:
         type: string
     docker:
       - image: cimg/openjdk:17.0
-    resource_class: small
+    resource_class: medium
     working_directory: ~/project
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: workspace
       - run:
-          name: Listing /tmp/workspace
-          command: ls -l /tmp/workspace
+          name: Listing ~/project
+          command: ls -l ~/project
+      - run:
+          name: Listing workspace
+          command: ls -l workspace
 #      - run:
 #          name: Listing the repository (backend)
 #          command: ls -l ./backend
