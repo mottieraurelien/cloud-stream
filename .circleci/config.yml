@@ -29,7 +29,7 @@ jobs:
           name: Listing the working directory before saving
           command: ls -l /tmp/workspace
       - persist_to_workspace:
-          root: /home/circleci/project
+          root: .
           paths:
             - backend
             - frontend
@@ -55,10 +55,10 @@ jobs:
           name: Listing the original workspace content
           command: ls -l /tmp/workspace
 #      - run:
-#          name: Listing the respository (backend)
+#          name: Listing the repository (backend)
 #          command: ls -l ./backend
 #      - run:
-#          name: Listing the respository (frontend)
+#          name: Listing the repository (frontend)
 #          command: ls -l ./frontend
 #      - run:
 #          name: Building << parameters.microservice-module-name >>
