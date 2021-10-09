@@ -21,6 +21,9 @@ jobs:
       - run:
           name: Building domain
           command: mvn clean install -f backend/cloud-stream-domain/pom.xml
+      - run:
+          name: Listing the respository content
+          command: ls -l /home/circleci/project
       - persist_to_workspace:
           root: .
           paths:
