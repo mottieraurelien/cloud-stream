@@ -20,9 +20,15 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
-    working_directory: /tmp
+    working_directory: ~/project
     steps:
       - checkout
+      - run:
+          name: Listing ./
+          command: ls -l ./
+      - run:
+          name: Listing ./workspace
+          command: ls -l ./workspace
       - run:
           name: Building common
           command: mvn clean install -f backend/cloud-stream-common/pom.xml
@@ -45,7 +51,7 @@ jobs:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: small
-    working_directory: /tmp
+    working_directory: ~/project
     steps:
       - attach_workspace:
           at: /tmp/workspace
@@ -53,8 +59,11 @@ jobs:
           name: Listing ./
           command: ls -l ./
       - run:
-          name: Listing /tmp
+          name: Listing ./
           command: ls -l /tmp
+      - run:
+          name: Listing /tmp
+          command: ls -l ~/project
 #      - run:
 #          name: Listing the repository (backend)
 #          command: ls -l ./backend
