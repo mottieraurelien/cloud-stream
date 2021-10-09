@@ -14,6 +14,7 @@
     <artifactId>cloud-stream</artifactId>
     <name>${project.artifactId}</name>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <description>Streaming medias from a cloud storage solution.</description>
 
     <properties>
