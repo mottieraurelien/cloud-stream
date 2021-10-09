@@ -27,7 +27,8 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - cloud-stream/*
+            - backend
+            - frontend
 
   microservice-build-deploy:
     parameters:
@@ -42,6 +43,12 @@ jobs:
       - run:
           name: Listing the respository
           command: ls -l ./
+      - run:
+          name: Listing the respository (backend)
+          command: ls -l ./backend
+      - run:
+          name: Listing the respository (frontend)
+          command: ls -l ./frontend
 #      - run:
 #          name: Building << parameters.microservice-module-name >>
 #          command: mvn clean install -f ./backend/<< parameters.microservice-module-name >>/pom.xml
