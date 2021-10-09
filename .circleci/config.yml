@@ -2,25 +2,20 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Common configuration for jobs :
-#executors:
-#  my-executor:
-#    docker:
-#      - image: buildpack-deps:jessie
-#        auth:
-#          username: mydockerhub-user
-#          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-#    working_directory: /tmp
+# Common configuration for jobs that compose the workflow :
+executors:
+  cloud-stream-executor:
+    docker:
+      - image: cimg/openjdk:17.0
+    resource_class: medium
+    working_directory: ~/project
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
 
   clone-repository:
-    docker:
-      - image: cimg/openjdk:17.0
-    resource_class: medium
-    working_directory: ~/project
+    executor: cloud-stream-executor
     steps:
       - checkout
       - run:
@@ -39,22 +34,16 @@ jobs:
             - frontend
 
   microservice-build-deploy:
+    executor: cloud-stream-executor
     parameters:
       microservice-module-name:
         type: string
-    docker:
-      - image: cimg/openjdk:17.0
-    resource_class: medium
-    working_directory: ~/project
     steps:
       - attach_workspace:
-          at: workspace
+          at: ./
       - run:
-          name: Listing ~/project
-          command: ls -l ~/project
-      - run:
-          name: Listing workspace
-          command: ls -l workspace
+          name: Checking workspace restoration
+          command: ls -l ./
 #      - run:
 #          name: Listing the repository (backend)
 #          command: ls -l ./backend
@@ -66,7 +55,6 @@ jobs:
 #          command: mvn clean install -f ./backend/<< parameters.microservice-module-name >>/pom.xml
 
 workflows:
-
   common:
     jobs:
       - clone-repository:
