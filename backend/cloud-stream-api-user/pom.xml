@@ -12,7 +12,6 @@
 
     <artifactId>cloud-stream-api-user</artifactId>
     <name>${project.artifactId}</name>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
