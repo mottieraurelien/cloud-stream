@@ -12,21 +12,27 @@ jobs:
     executor: cloud-stream-executor
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - maven-dependencies-{{ checksum "backend/pom.xml" }}
-      - run:
-          name: Building common
-          command: mvn install -f backend/cloud-stream-common/pom.xml
-      - run:
-          name: Building repository
-          command: mvn install -f backend/cloud-stream-repository/pom.xml
-      - run:
-          name: Building domain
-          command: mvn install -f backend/cloud-stream-domain/pom.xml
       - persist_to_workspace:
           root: .
           paths:
+            - backend
+            - frontend
+
+  backend-build-artefacts:
+    executor: cloud-stream-executor
+    steps:
+      - restore_cache:
+          keys:
+            - maven-dependencies-{{ checksum "backend/pom.xml" }}
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Building backend
+          command: mvn install -f backend/pom.xml
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .m2
             - backend
             - frontend
       - save_cache:
@@ -34,61 +40,48 @@ jobs:
             - ~/.m2
           key: maven-dependencies-{{ checksum "backend/pom.xml" }}
 
-  microservice-build:
+  backend-microservice-build-container:
     executor: cloud-stream-executor
     parameters:
       microservice-module-name:
         type: string
     steps:
-      - attach_workspace:
-          at: ./
       - restore_cache:
           keys:
             - maven-dependencies-{{ checksum "backend/pom.xml" }}
+      - attach_workspace:
+          at: ./
       - run:
-          name: Resolving Maven dependencies
-          command: mvn dependency:resolve -f backend/pom.xml
-      - run:
-          name: Building << parameters.microservice-module-name >>
-          command: mvn package -f backend/<< parameters.microservice-module-name >>/pom.xml -X
+          name: Running << parameters.microservice-module-name >>
+          command: mvn spring-boot:run -f backend/<< parameters.microservice-module-name >>/pom.xml
       - save_cache:
           paths:
             - ~/.m2
           key: maven-dependencies-{{ checksum "backend/pom.xml" }}
 
 workflows:
-  integration:
+  release-pipeline:
     jobs:
       - clone-repository:
           filters:
             branches:
               only: master
-      - microservice-build:
+      - backend-build-artefacts:
           requires:
             - clone-repository
+      - backend-microservice-build-container-image:
+          requires:
+            - backend-build-artefacts
           microservice-module-name: cloud-stream-api-user
-          filters:
-            branches:
-              only: master
-      - microservice-build:
+      - backend-microservice-build-container-image:
           requires:
-            - clone-repository
+            - backend-build-artefacts
           microservice-module-name: cloud-stream-api-storage
-          filters:
-            branches:
-              only: master
-      - microservice-build:
+      - backend-microservice-build-container-image:
           requires:
-            - clone-repository
+            - backend-build-artefacts
           microservice-module-name: cloud-stream-api-stream
-          filters:
-            branches:
-              only: master
-      - microservice-build:
+      - backend-microservice-build-container-image:
           requires:
-            - clone-repository
+            - backend-build-artefacts
           microservice-module-name: cloud-stream-api-download
-          filters:
-            branches:
-              only: master
-#    deployment: TODO
