@@ -24,12 +24,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Listing ./
-          command: ls -l ./
-      - run:
-          name: Listing ./workspace
-          command: ls -l ./workspace
-      - run:
           name: Building common
           command: mvn clean install -f backend/cloud-stream-common/pom.xml
       - run:
@@ -39,7 +33,7 @@ jobs:
           name: Building domain
           command: mvn clean install -f backend/cloud-stream-domain/pom.xml
       - persist_to_workspace:
-          root: workspace
+          root: .
           paths:
             - backend
             - frontend
