@@ -41,7 +41,7 @@ jobs:
       - save_cache:
           paths:
             - /home/circleci/.m2/
-          key: maven-dependencies-repository-v2
+          key: maven-dependencies-repository-v2-{{ checksum "backend/pom.xml" }}
 
   backend-build-container-image:
     executor: cloud-stream-executor
@@ -61,6 +61,8 @@ jobs:
       - run:
           name: Docker images
           command: docker image ls -a
+      - heroku/install
+      - heroku/check-authentication
 
 workflows:
   release-pipeline:
