@@ -10,7 +10,6 @@ executors:
     resource_class: medium
     environment:
       JVM_OPTS: -Xmx3g
-    working_directory: ~/project
 
 jobs:
   clone-repository:
@@ -27,8 +26,8 @@ jobs:
     executor: cloud-stream-executor
     steps:
       - run:
-          name: Listing backend folder
-          command: ls -l ~/project/backend/
+          name: Listing backend-build-artefacts
+          command: ls -l /home/circleci/
       - restore_cache:
           keys:
             - maven-dependencies-{{ checksum "~/project/backend/pom.xml" }}
