@@ -40,7 +40,7 @@ jobs:
             - frontend
       - save_cache:
           paths:
-            - .m2
+            - /home/circleci/.m2/
           key: maven-dependencies-repository
 
   backend-build-container-image:
@@ -63,7 +63,7 @@ jobs:
           command: docker image ls -a
       - save_cache:
           paths:
-            - .m2
+            - /home/circleci/.m2/
           key: maven-dependencies-repository
 
 workflows:
