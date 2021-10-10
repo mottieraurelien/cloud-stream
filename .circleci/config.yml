@@ -58,11 +58,11 @@ jobs:
           at: ./
       - setup_remote_docker
       - run:
-          name: Docker version
-          command: docker -v
-      - run:
           name: Running << parameters.microservice-module-name >>
           command: mvn spring-boot:build-image -f backend/<< parameters.microservice-module-name >>/pom.xml
+      - run:
+          name: Docker images
+          command: docker image ls -a
       - save_cache:
           paths:
             - ~/.m2
@@ -78,18 +78,18 @@ workflows:
       - backend-build-artefacts:
           requires:
             - clone-repository
-      - backend-build-container-image:
-          requires:
-            - backend-build-artefacts
-          microservice-module-name: cloud-stream-api-user
-      - backend-build-container-image:
-          requires:
-            - backend-build-artefacts
-          microservice-module-name: cloud-stream-api-storage
-      - backend-build-container-image:
-          requires:
-            - backend-build-artefacts
-          microservice-module-name: cloud-stream-api-stream
+#      - backend-build-container-image:
+#          requires:
+#            - backend-build-artefacts
+#          microservice-module-name: cloud-stream-api-user
+#      - backend-build-container-image:
+#          requires:
+#            - backend-build-artefacts
+#          microservice-module-name: cloud-stream-api-storage
+#      - backend-build-container-image:
+#          requires:
+#            - backend-build-artefacts
+#          microservice-module-name: cloud-stream-api-stream
       - backend-build-container-image:
           requires:
             - backend-build-artefacts
