@@ -36,8 +36,8 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - project/backend
-            - project/frontend
+            - backend
+            - frontend
       - save_cache:
           paths:
             - .m2
