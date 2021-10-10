@@ -70,19 +70,16 @@ jobs:
       - run:
           name: Pushing docker image to Heroku
           command: docker push registry.heroku.com/<< parameters.microservice-module-name >>/web
-#      - heroku/install
-#      - run:
-#          name: Heroku login
-#          command: heroku container:login
-#      - run:
-#          name: Heroku push
-#          command: heroku container:push -a << parameters.microservice-module-name >> web
-#      - run:
-#          name: Heroku release
-#          command: heroku container:release -a << parameters.microservice-module-name >> web
-#      - run:
-#          name: Heroku logout
-#          command: heroku container:logout
+      - heroku/install
+      - run:
+          name: Heroku login
+          command: heroku container:login
+      - run:
+          name: Heroku release
+          command: heroku container:release web
+      - run:
+          name: Heroku logout
+          command: heroku container:logout
 
 workflows:
   release-pipeline:
