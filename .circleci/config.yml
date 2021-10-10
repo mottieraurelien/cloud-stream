@@ -59,12 +59,18 @@ jobs:
           name: Running << parameters.microservice-module-name >>
           command: mvn spring-boot:build-image -f backend/<< parameters.microservice-module-name >>/pom.xml
       - run:
-          name: Docker images
+          name: Docker list images
           command: docker image ls -a
       - heroku/install
       - run:
           name: Heroku whoami
           command: heroku whoami
+      - run:
+          name: Heroku push
+          command: heroku container:push -a aurelienmottier/<< parameters.microservice-module-name >> web
+      - run:
+          name: Heroku release
+          command: heroku container:release -a aurelienmottier/<< parameters.microservice-module-name >> web
 
 workflows:
   release-pipeline:
