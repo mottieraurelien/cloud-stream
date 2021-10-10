@@ -61,10 +61,6 @@ jobs:
       - run:
           name: Docker images
           command: docker image ls -a
-      - save_cache:
-          paths:
-            - /home/circleci/.m2/
-          key: maven-dependencies-repository-v2
 
 workflows:
   release-pipeline:
