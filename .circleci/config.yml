@@ -27,7 +27,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - maven-dependencies-repository
+            - maven-dependencies-repository-v2
       - attach_workspace:
           at: ./
       - run:
@@ -41,7 +41,7 @@ jobs:
       - save_cache:
           paths:
             - /home/circleci/.m2/
-          key: maven-dependencies-repository
+          key: maven-dependencies-repository-v2
 
   backend-build-container-image:
     executor: cloud-stream-executor
@@ -51,7 +51,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - maven-dependencies-repository
+            - maven-dependencies-repository-v2
       - attach_workspace:
           at: ./
       - setup_remote_docker
@@ -64,7 +64,7 @@ jobs:
       - save_cache:
           paths:
             - /home/circleci/.m2/
-          key: maven-dependencies-repository
+          key: maven-dependencies-repository-v2
 
 workflows:
   release-pipeline:
