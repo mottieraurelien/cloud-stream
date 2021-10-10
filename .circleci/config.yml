@@ -25,11 +25,11 @@ jobs:
   backend-build-artefacts:
     executor: cloud-stream-executor
     steps:
-      - restore_cache:
-          keys:
-            - maven-dependencies-repository-v2
       - attach_workspace:
           at: ./
+      - restore_cache:
+          keys:
+            - maven-dependencies-repository-v2-{{ checksum "backend/pom.xml" }}
       - run:
           name: Building backend
           command: mvn install -f backend/pom.xml
@@ -49,11 +49,11 @@ jobs:
       microservice-module-name:
         type: string
     steps:
-      - restore_cache:
-          keys:
-            - maven-dependencies-repository-v2
       - attach_workspace:
           at: ./
+      - restore_cache:
+          keys:
+            - maven-dependencies-repository-v2-{{ checksum "backend/pom.xml" }}
       - setup_remote_docker
       - run:
           name: Running << parameters.microservice-module-name >>
