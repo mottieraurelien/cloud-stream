@@ -25,30 +25,23 @@ jobs:
   backend-build-artefacts:
     executor: cloud-stream-executor
     steps:
-      - run:
-          name: Listing backend-build-artefacts
-          command: ls -l /home/circleci/
       - restore_cache:
           keys:
-            - maven-dependencies-{{ checksum "/home/circleci/project/backend/pom.xml" }}
+            - maven-dependencies-repository
       - attach_workspace:
           at: ./
       - run:
           name: Building backend
           command: mvn install -f backend/pom.xml
-      - run:
-          name: Listing backend-build-artefacts m2
-          command: ls -l /home/circleci/.m2/repository
       - persist_to_workspace:
           root: .
           paths:
-            - .m2
             - project/backend
             - project/frontend
       - save_cache:
           paths:
             - .m2
-          key: maven-dependencies-{{ checksum "/home/circleci/project/backend/pom.xml" }}
+          key: maven-dependencies-repository
 
   backend-build-container-image:
     executor: cloud-stream-executor
@@ -56,12 +49,9 @@ jobs:
       microservice-module-name:
         type: string
     steps:
-      - run:
-          name: Checking home content
-          command: ls -l ~/
       - restore_cache:
           keys:
-            - maven-dependencies-{{ checksum "/home/circleci/project/backend/pom.xml" }}
+            - maven-dependencies-repository
       - attach_workspace:
           at: ./
       - setup_remote_docker
@@ -73,8 +63,8 @@ jobs:
           command: docker image ls -a
       - save_cache:
           paths:
-            - ~/.m2
-          key: maven-dependencies-{{ checksum "/home/circleci/project/backend/pom.xml" }}
+            - .m2
+          key: maven-dependencies-repository
 
 workflows:
   release-pipeline:
