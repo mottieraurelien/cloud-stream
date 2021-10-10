@@ -62,6 +62,9 @@ jobs:
           name: Docker list images
           command: docker image ls -a
       - run:
+          name: Logging to Heroku Docker registry
+          command: docker login --username=mottier.aurelien.shopping@gmail.com --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
           name: Tagging docker image to Heroku
           command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web
       - run:
