@@ -1,10 +1,15 @@
 version: 2.1
 
+orbs:
+  heroku: circleci/heroku@1.2.6
+
 executors:
   cloud-stream-executor:
     docker:
       - image: cimg/openjdk:17.0
     resource_class: medium
+    environment:
+      JVM_OPTS: -Xmx3g
     working_directory: ~/project
 
 jobs:
