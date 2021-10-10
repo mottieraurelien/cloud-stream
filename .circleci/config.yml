@@ -36,6 +36,18 @@ jobs:
       - run:
           name: Building backend
           command: mvn install -f backend/pom.xml
+      - run:
+          name: Listing backend-build-artefacts project
+          command: ls -l /home/circleci/project/
+      - run:
+          name: Listing backend-build-artefacts backend
+          command: ls -l /home/circleci/project/backend
+      - run:
+          name: Listing backend-build-artefacts frontend
+          command: ls -l /home/circleci/project/frontend
+      - run:
+          name: Listing backend-build-artefacts m2
+          command: ls -l /home/circleci/project/.m2/repository
       - persist_to_workspace:
           root: .
           paths:
