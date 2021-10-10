@@ -66,6 +66,9 @@ jobs:
           name: Heroku whoami
           command: heroku whoami
       - run:
+          name: Heroku login
+          command: heroku container:login
+      - run:
           name: Heroku push
           command: heroku container:push -a aurelienmottier/<< parameters.microservice-module-name >> web
       - run:
