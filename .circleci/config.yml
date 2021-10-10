@@ -76,7 +76,7 @@ jobs:
           command: heroku container:login
       - run:
           name: Heroku release
-          command: heroku container:release web
+          command: heroku container:release web -a << parameters.microservice-module-name >>
       - run:
           name: Heroku logout
           command: heroku container:logout
