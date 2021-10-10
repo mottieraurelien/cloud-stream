@@ -38,7 +38,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>docker.io/aurelienmottier/${project.artifactId}:v${parent.version}</name>
+                        <name>docker.io/aurelienmottier/${project.artifactId}:v${project.parent.version}</name>
                     </image>
                 </configuration>
             </plugin>
