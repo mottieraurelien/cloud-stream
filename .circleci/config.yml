@@ -26,6 +26,9 @@ jobs:
   backend-build-artefacts:
     executor: cloud-stream-executor
     steps:
+      - run:
+          name: Checking home content
+          command: ls -l ~/
       - restore_cache:
           keys:
             - maven-dependencies-{{ checksum "backend/pom.xml" }}
@@ -56,7 +59,7 @@ jobs:
           command: ls -l ~/
       - restore_cache:
           keys:
-            - maven-dependencies-{{ checksum "backend/pom.xml" }}
+            - maven-dependencies-{{ checksum "project/backend/pom.xml" }}
       - attach_workspace:
           at: ./
       - setup_remote_docker
@@ -69,7 +72,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          key: maven-dependencies-{{ checksum "backend/pom.xml" }}
+          key: maven-dependencies-{{ checksum "project/backend/pom.xml" }}
 
 workflows:
   release-pipeline:
