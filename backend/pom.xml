@@ -21,6 +21,7 @@
 
         <!-- Project properties -->
         <java.version>11</java.version>
+        <spring.boot.version>2.5.5</spring.boot.version>
         <encoding.type>UTF-8</encoding.type>
         <project.build.sourceEncoding>${encoding.type}</project.build.sourceEncoding>
 
@@ -82,7 +83,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${project.parent.version}</version>
+                    <version>${spring.boot.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
