@@ -52,8 +52,8 @@ jobs:
         type: string
     steps:
       - run:
-          - name: Checking home content
-          - command: ls -l /home/circleci/project/
+          name: Checking home content
+          command: ls -l ~/
       - restore_cache:
           keys:
             - maven-dependencies-{{ checksum "backend/pom.xml" }}
