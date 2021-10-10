@@ -57,6 +57,9 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
+          name: Docker version
+          command: docker -v
+      - run:
           name: Running << parameters.microservice-module-name >>
           command: mvn spring-boot:build-image -f backend/<< parameters.microservice-module-name >>/pom.xml
       - save_cache:
