@@ -63,17 +63,17 @@ jobs:
           command: docker image ls -a
       - heroku/install
       - run:
-          name: Heroku whoami
-          command: heroku whoami
-      - run:
           name: Heroku login
           command: heroku container:login
       - run:
           name: Heroku push
-          command: heroku container:push -a aurelienmottier/<< parameters.microservice-module-name >> web
+          command: heroku container:push -a << parameters.microservice-module-name >> web
       - run:
           name: Heroku release
-          command: heroku container:release -a aurelienmottier/<< parameters.microservice-module-name >> web
+          command: heroku container:release -a << parameters.microservice-module-name >> web
+      - run:
+          name: Heroku logout
+          command: heroku container:logout
 
 workflows:
   release-pipeline:
