@@ -62,9 +62,9 @@ jobs:
       - run:
           name: Logging to Heroku
           command: heroku container:login
-      - run:
-          name: Removing Heroku running container
-          command: heroku container:rm web -a << parameters.microservice-module-name >>
+#      - run:
+#          name: Removing Heroku running container
+#          command: heroku container:rm web -a << parameters.microservice-module-name >>
       - run:
           name: Logging to Heroku Docker registry
           command: docker login --username=mottier.aurelien.shopping@gmail.com --password=$HEROKU_API_KEY registry.heroku.com
