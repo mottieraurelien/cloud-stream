@@ -67,10 +67,7 @@ jobs:
           command: heroku container:rm web -a << parameters.microservice-module-name >>
       - run:
           name: Logging to Heroku Docker registry
-          command: docker login --username=mottier.aurelien.shopping@gmail.com --password=$HEROKU_API_KEY registry.heroku.com
-#      - run:
-#          name: Cleaning Heroku Docker registry
-#          command: docker rmi --force registry.heroku.com/<< parameters.microservice-module-name >>/web
+          command: docker login --username=mottier.aurelien.shopping@gmail.com --password-stdin=$HEROKU_API_KEY registry.heroku.com
       - run:
           name: Tagging docker image to Heroku
           command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web
