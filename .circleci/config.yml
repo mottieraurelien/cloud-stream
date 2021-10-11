@@ -65,11 +65,14 @@ jobs:
           name: Logging to Heroku Docker registry
           command: docker login --username=mottier.aurelien.shopping@gmail.com --password=$HEROKU_API_KEY registry.heroku.com
       - run:
+          name: Removing docker latest image from Heroku
+          command: docker rmi registry.heroku.com/<< parameters.microservice-module-name >>/web:latest
+      - run:
           name: Tagging docker image to Heroku
-          command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web
+          command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web:latest
       - run:
           name: Pushing docker image to Heroku
-          command: docker push registry.heroku.com/<< parameters.microservice-module-name >>/web
+          command: docker push registry.heroku.com/<< parameters.microservice-module-name >>/web:latest
       - heroku/install
       - run:
           name: Heroku login
