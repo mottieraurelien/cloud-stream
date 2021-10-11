@@ -58,22 +58,25 @@ jobs:
       - run:
           name: Running << parameters.microservice-module-name >>
           command: mvn spring-boot:build-image -f backend/<< parameters.microservice-module-name >>/pom.xml -DskipTests=true
+      - heroku/install
+      - run:
+          name: Logging to Heroku
+          command: heroku container:login
+      - run:
+          name: Removing Heroku running container
+          command: heroku container:rm -a << parameters.microservice-module-name >>
       - run:
           name: Logging to Heroku Docker registry
           command: docker login --username=mottier.aurelien.shopping@gmail.com --password=$HEROKU_API_KEY registry.heroku.com
-      - run:
-          name: Cleaning Heroku Docker registry
-          command: docker rmi --force registry.heroku.com/<< parameters.microservice-module-name >>/web
+#      - run:
+#          name: Cleaning Heroku Docker registry
+#          command: docker rmi --force registry.heroku.com/<< parameters.microservice-module-name >>/web
       - run:
           name: Tagging docker image to Heroku
           command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web
       - run:
           name: Pushing docker image to Heroku
           command: docker push registry.heroku.com/<< parameters.microservice-module-name >>/web
-      - heroku/install
-      - run:
-          name: Heroku login
-          command: heroku container:login
       - run:
           name: Heroku release
           command: heroku container:release web -a << parameters.microservice-module-name >>
