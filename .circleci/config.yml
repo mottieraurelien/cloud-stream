@@ -57,22 +57,16 @@ jobs:
       - setup_remote_docker
       - run:
           name: Running << parameters.microservice-module-name >>
-          command: mvn spring-boot:build-image -f backend/<< parameters.microservice-module-name >>/pom.xml
-      - run:
-          name: Docker list images
-          command: docker image ls -a
+          command: mvn spring-boot:build-image -f backend/<< parameters.microservice-module-name >>/pom.xml -DskipTests=true
       - run:
           name: Logging to Heroku Docker registry
           command: docker login --username=mottier.aurelien.shopping@gmail.com --password=$HEROKU_API_KEY registry.heroku.com
       - run:
-          name: Removing docker latest image from Heroku
-          command: docker rmi registry.heroku.com/<< parameters.microservice-module-name >>/web
-      - run:
           name: Tagging docker image to Heroku
-          command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web
+          command: docker tag aurelienmottier/<< parameters.microservice-module-name >>:v1.0.0 registry.heroku.com/<< parameters.microservice-module-name >>/web:v1.0.0
       - run:
           name: Pushing docker image to Heroku
-          command: docker push registry.heroku.com/<< parameters.microservice-module-name >>/web
+          command: docker push registry.heroku.com/<< parameters.microservice-module-name >>/web:v1.0.0
       - heroku/install
       - run:
           name: Heroku login
