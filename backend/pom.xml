@@ -20,10 +20,14 @@
     <properties>
 
         <!-- Project properties -->
-        <java.version>11</java.version>
         <spring.boot.version>2.5.5</spring.boot.version>
+        <spring.boot.native.version>0.10.4</spring.boot.native.version>
         <encoding.type>UTF-8</encoding.type>
         <project.build.sourceEncoding>${encoding.type}</project.build.sourceEncoding>
+
+        <!-- External dependencies -->
+        <spring.boot.native.version>0.10.4</spring.boot.native.version>
+        <native.image.maven.plugin.version>21.2.0</native.image.maven.plugin.version>
 
     </properties>
 
@@ -36,6 +40,36 @@
         <module>cloud-stream-api-stream</module>
         <module>cloud-stream-api-download</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.nativeimage</groupId>
+                        <artifactId>native-image-maven-plugin</artifactId>
+                        <version>${native.image.maven.plugin.version}</version>
+                        <configuration>
+                            <mainClass>aurelienmottier.cloud.stream.Start</mainClass>
+                            <buildArgs>
+                                <arg>--static</arg>
+                                <arg>--libc=musl</arg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native-image</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
@@ -74,6 +108,11 @@
                 <artifactId>cloud-stream-api-download</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.experimental</groupId>
+                <artifactId>spring-native</artifactId>
+                <version>${spring.boot.native.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -84,18 +123,66 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.boot.version}</version>
+                    <configuration>
+                        <classifier>exec</classifier>
+                        <image>
+                            <builder>paketobuildpacks/builder:tiny</builder>
+                            <env>
+                                <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                            </env>
+                        </image>
+                    </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
+                    <groupId>org.springframework.experimental</groupId>
+                    <artifactId>spring-aot-maven-plugin</artifactId>
+                    <version>${spring.boot.native.version}</version>
                     <configuration>
-                        <release>${java.version}</release>
-                        <encoding>${encoding.type}</encoding>
+                        <removeJmxSupport>true</removeJmxSupport>
+                        <removeSpelSupport>true</removeSpelSupport>
+                        <removeYamlSupport>true</removeYamlSupport>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>test-generate</id>
+                            <goals>
+                                <goal>test-generate</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>generate</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <!-- Spring Native dependencies are not on Maven Central yet. -->
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- Maven plugins for Spring Native are not on Maven Central yet. -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

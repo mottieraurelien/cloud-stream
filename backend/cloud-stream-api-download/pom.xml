@@ -14,7 +14,19 @@
     <artifactId>cloud-stream-api-download</artifactId>
     <name>${project.artifactId}</name>
 
+    <properties>
+        <spring.boot.native.version>0.10.4</spring.boot.native.version>
+    </properties>
+
     <dependencies>
+
+        <!-- Spring Native -->
+        <dependency>
+            <groupId>org.springframework.experimental</groupId>
+            <artifactId>spring-native</artifactId>
+        </dependency>
+
+        <!-- Undertow as our servlet container -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -31,20 +43,19 @@
         </dependency>
     </dependencies>
 
+    <!-- Building the docker image that will contain the native code related to this microservice. -->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <image>
-                        <name>docker.io/aurelienmottier/${project.artifactId}:v${project.parent.version}</name>
-                    </image>
+                    <mainClass>aurelienmottier.cloud.stream.Start</mainClass>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.springframework.experimental</groupId>
+                <artifactId>spring-aot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
